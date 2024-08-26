@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "kode-test"
+version = "0.1.0"
+description = ""
+authors = ["sergey936 <s.suslakov@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+sqlalchemy = "^2.0.32"
+asyncpg = "^0.29.0"
+alembic = "^1.13.2"
+fastapi = "^0.112.2"
+punq = "^0.7.0"
+pydantic-settings = "^2.4.0"
+pyjwt = "^2.9.0"
+uvicorn = "^0.30.6"
+python-multipart = "^0.0.9"
+pytest-asyncio = "^0.24.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
