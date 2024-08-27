@@ -8,6 +8,7 @@ services:
     container_name: note_app
     depends_on:
       - pg_db
+      - test_pg_db
     ports:
       - "8000:8000"
     command: [ 'sh', 'app.sh' ]
@@ -34,6 +35,23 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
     ports:
       - "5432:5432"
+    networks:
+      - backend
+
+  test_pg_db:
+    image: postgres:12.19-alpine3.20
+
+    container_name: test_db
+
+    environment:
+      POSTGRES_DB: ${TEST_DATABASE_NAME}
+      POSTGRES_USER: ${TEST_DATABASE_USER}
+      POSTGRES_PASSWORD: ${TEST_DATABASE_PASS}
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+    ports:
+      - "5433:5432"
     networks:
       - backend
 

@@ -1,10 +1,11 @@
 from dataclasses import dataclass
-from datetime import timedelta, timezone
+from datetime import datetime, timedelta, timezone
 
 import jwt
-from sqlalchemy.sql.functions import now
+
 
 from infra.db.repository.user.base import BaseUserRepository
+from logic.exceptions.auth import IncorrectCredentialsException
 from logic.services.password.password import PasswordService
 from settings.config import Config
 
@@ -16,20 +17,23 @@ class AuthService:
     config: Config
 
     async def create_access_token(self, email: str) -> str:
+
         data = {
-            'email': email,
+            "email": email,
         }
 
         expires_delta = timedelta(minutes=self.config.token_expire_min)
         to_encode = data.copy()
 
         if expires_delta:
-            expire = now(timezone.utc) + expires_delta
+            expire = datetime.now(timezone.utc) + expires_delta
         else:
-            expire = now(timezone.utc) + timedelta(minutes=15)
+            expire = datetime.now(timezone.utc) + timedelta(minutes=15)
 
         to_encode.update({"exp": expire})
-        encoded_jwt = jwt.encode(to_encode, self.config.secret_key, algorithm=self.config.algorithm)
+        encoded_jwt = jwt.encode(
+            to_encode, self.config.secret_key, algorithm=self.config.algorithm
+        )
 
         return encoded_jwt
 
@@ -40,7 +44,7 @@ class AuthService:
             raise IncorrectCredentialsException()
 
         if not self.password_service.check_password(
-                plain_password=password,
-                password=user.password,
+            plain_password=password,
+            password=user.password,
         ):
             raise IncorrectCredentialsException()
