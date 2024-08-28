@@ -9,6 +9,7 @@ services:
     depends_on:
       - pg_db
       - test_pg_db
+      - pgadmin
     ports:
       - "8000:8000"
     command: [ 'sh', 'app.sh' ]
