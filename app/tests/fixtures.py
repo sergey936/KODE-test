@@ -13,7 +13,7 @@ def build_sa_test_engine(config: Config) -> AsyncEngine:
 
 
 def init_dummy_container() -> Container:
-    container = _init_container()
+    container: Container = _init_container()
 
     config: Config = container.resolve(Config)
     container.register(

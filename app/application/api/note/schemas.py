@@ -6,11 +6,6 @@ from application.api.schemas import BaseQueryResponseSchema
 from domain.entities.note import Note
 
 
-class Filters(BaseModel):
-    limit: int = 10
-    offset: int = 0
-
-
 class CreateNoteSchema(BaseModel):
     text: str
 
@@ -31,4 +26,10 @@ class NoteDetailSchema(BaseModel):
         )
 
 
-class GetNotesQueryResponseSchema(BaseQueryResponseSchema[list[NoteDetailSchema]]): ...
+class GetNotesQueryResponseSchema(BaseQueryResponseSchema[list[NoteDetailSchema]]):
+    ...
+
+
+class Filters(BaseModel):
+    limit: int = 10
+    offset: int = 0

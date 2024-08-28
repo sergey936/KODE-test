@@ -11,7 +11,7 @@ class YandexService:
     config: Config
     http_client: AsyncClient
 
-    async def validate_text(self, text: str) -> list[dict] | None:
+    async def validate_text(self, text: str) -> list[dict]:
         response = await self.http_client.post(
             url=self.config.YANDEX_SPELLER_API_URL, data={"text": text}
         )

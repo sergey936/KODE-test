@@ -30,7 +30,7 @@ class SQLAlchemyNoteRepository(SQLAlchemyRepository, BaseNoteRepository):
         user_id: str,
         limit: int,
         offset: int,
-    ) -> tuple[int, Iterable[Note]] | None:
+    ) -> Iterable[Note] | None:
         async with self._session() as session:
             query = (
                 select(NoteModel)

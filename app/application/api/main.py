@@ -12,7 +12,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(router=auth_router, prefix="/auth", tags=["Auth"])
-    app.include_router(router=user_router, prefix="/user", tags=["User"])
-    app.include_router(router=note_handler, prefix="/note", tags=["Note"])
+    app.include_router(router=user_router, prefix="/users", tags=["User"])
+    app.include_router(router=note_handler, prefix="/notes", tags=["Note"])
 
     return app

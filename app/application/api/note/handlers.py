@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends, HTTPException, Body
+from fastapi import APIRouter, status, Depends, HTTPException
 from punq import Container
 
 from application.api.note.schemas import (
@@ -7,9 +7,12 @@ from application.api.note.schemas import (
     GetNotesQueryResponseSchema,
     CreateNoteSchema,
 )
+from domain.entities.note import Note
 from domain.entities.user import User
 from domain.exceptions.base import ApplicationException
 from logic.di import get_container
+from logic.exceptions.auth import AuthException
+from logic.exceptions.base import NotFoundException
 from logic.services.auth.utils import get_current_user
 
 from logic.services.note.note import NoteService
@@ -33,17 +36,21 @@ async def create_new_note_handler(
     try:
         note = await service.create_note(text=schema.text, user_id=user.oid)
 
-    except ApplicationException as error:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail={"error": error.message}
-        )
+    except AuthException as auth_error:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={'error': auth_error.message})
+
+    except NotFoundException as not_found_error:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={'error': not_found_error.message})
+
+    except ApplicationException as app_error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={'error': app_error.message})
 
     return NoteDetailSchema.from_entity(note=note)
 
 
 @router.get(
     path="",
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_200_OK,
     description="Получить все заметки текущего авторизованного пользователя.",
     response_model=GetNotesQueryResponseSchema,
 )
@@ -61,10 +68,14 @@ async def get_all_current_user_notes(
             offset=filters.offset,
         )
 
-    except ApplicationException as error:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail={"error": error.message}
-        )
+    except AuthException as auth_error:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={'error': auth_error.message})
+
+    except NotFoundException as not_found_error:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={'error': not_found_error.message})
+
+    except ApplicationException as app_error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={'error': app_error.message})
 
     return GetNotesQueryResponseSchema(
         limit=filters.limit,

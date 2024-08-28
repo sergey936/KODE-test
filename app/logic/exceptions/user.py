@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from logic.exceptions.base import LogicException
+from logic.exceptions.base import LogicException, NotFoundException
 
 
 @dataclass
@@ -12,7 +12,7 @@ class UserAlreadyExistsException(LogicException):
 
 
 @dataclass
-class UserNotFoundException(LogicException):
+class UserNotFoundException(NotFoundException):
 
     @property
     def message(self) -> str:

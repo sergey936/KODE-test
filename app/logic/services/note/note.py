@@ -10,11 +10,16 @@ from logic.services.yandex.validator import YandexService
 class NoteService:
     note_repository: BaseNoteRepository
 
-    async def create_note(self, user_id: str, text: str) -> Note: ...
+    async def create_note(self, user_id: str, text: str) -> Note:
+        ...
 
     async def get_all_user_notes(
-        self, user_id: str, limit: int, offset: int
-    ) -> tuple[int, Iterable[Note]]: ...
+        self,
+        user_id: str,
+        limit: int,
+        offset: int,
+    ) -> Iterable[Note]:
+        ...
 
 
 @dataclass
@@ -44,15 +49,16 @@ class CompositeNoteService(NoteService):
         return new_note
 
     async def get_all_user_notes(
-        self, user_id: str, limit: int, offset: int
-    ) -> tuple[int, Iterable[Note]]:
+        self,
+        user_id: str,
+        limit: int,
+        offset: int,
+    ) -> Iterable[Note]:
 
         notes = await self.note_repository.get_all_user_notes(
             user_id=user_id,
             limit=limit,
             offset=offset,
         )
-        if not notes:
-            return []
 
         return notes

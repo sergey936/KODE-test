@@ -5,6 +5,8 @@ from starlette import status
 from application.api.user.schemas import UserDetailSchema, UserCreateSchema
 from domain.exceptions.base import ApplicationException
 from logic.di import get_container
+from logic.exceptions.auth import AuthException
+from logic.exceptions.base import NotFoundException
 from logic.services.user.user import UserService
 
 router = APIRouter()
@@ -28,9 +30,13 @@ async def create_new_user_handler(
             password=schema.password,
         )
 
-    except ApplicationException as error:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail={"error": error.message}
-        )
+    except AuthException as auth_error:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={'error': auth_error.message})
+
+    except NotFoundException as not_found_error:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={'error': not_found_error.message})
+
+    except ApplicationException as app_error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={'error': app_error.message})
 
     return UserDetailSchema.from_entity(user=user)

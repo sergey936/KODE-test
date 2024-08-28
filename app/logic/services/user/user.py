@@ -25,7 +25,6 @@ class UserService:
             raise UserAlreadyExistsException()
 
         hash_password = self.password_service.hash_password(password)
-
         user = User.create_user(email=email, password=hash_password)
 
         return await self.user_repository.add_user(user=user)

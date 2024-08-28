@@ -9,3 +9,11 @@ class LogicException(ApplicationException):
     @property
     def message(self) -> str:
         return "Ошибка логики приложения."
+
+
+@dataclass
+class NotFoundException(LogicException):
+
+    @property
+    def message(self) -> str:
+        return "Объект не найден."
