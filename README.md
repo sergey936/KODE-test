@@ -2,11 +2,14 @@
 
 ## Запуск приложения
     Создать .env файл и скопировать в него содержимое из .env.example
-### Создать контейнер: <br>
+### Создать контейнер: 
     docker compose -f docker_compose/app.yaml build
 ### Запустить контейнер:
     docker compose -f docker_compose/app.yaml up
-
+### Зайти в запущенный контейнер
+    docker exec -it note_app bash
+### Запустить миграции
+    alembic upgrade head
 ## Запуск тестов
 ### Зайти в запущенный контейнер <br>
     docker exec -it note_app bash
