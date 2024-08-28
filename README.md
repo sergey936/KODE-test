@@ -2,8 +2,10 @@
 
 ## Запуск приложения
     Создать .env файл и скопировать в него содержимое из .env.example
-### Запустить команду: <br>
-    docker compose -f docker_compose/app.yaml up --build -d
+### Создать контейнер: <br>
+    docker compose -f docker_compose/app.yaml build
+### Запустить контейнер:
+    docker compose -f docker_compose/app.yaml up
 
 ## Запуск тестов
 ### Зайти в запущенный контейнер <br>
